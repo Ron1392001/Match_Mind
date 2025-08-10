@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>הזנת נתוני שחקנים</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+    <h1>📥 הזנת נתוני שחקנים</h1>
+
+    {% if message %}
+        <p style="color:green;">{{ message }}</p>
+    {% endif %}
+
+    <form method="post">
+        <label>מחזור: <input type="text" name="round" required></label><br><br>
+        <label>שם שחקן: <input type="text" name="player_name" required></label><br><br>
+        <label>שם קבוצה: <input type="text" name="team_name" required></label><br><br>
+        <label>גולים: <input type="number" name="goals" min="0" required></label><br><br>
+        <label>בישולים: <input type="number" name="assists" min="0" required></label><br><br>
+        <label>מסירות מפתח: <input type="number" name="key_passes" min="0" required></label><br><br>
+        <label>🎯 מסירות מדויקות למשחק: <input type="number" name="accurate_passes" min="0" required></label><br><br>
+        <label>🧠 יצירת מצבים / מסירות מפתח מתקדמות: <input type="number" name="chances_created" min="0" required></label><br><br>
+        <label>🏃‍♂️ כמות ריצות ספרינט: <input type="number" name="sprints" min="0" required></label><br><br>
+        <label>🎯 xG (שערים צפויים): <input type="number" step="0.01" name="xg" min="0" required></label><br><br>
+        <label>🕹️ אחוז הצלחה בדריבלים: <input type="number" step="0.01" name="dribble_success" min="0" max="1" required> %</label><br><br>
+        <label>🛡️ אחוז הצלחה בתיקולים: <input type="number" step="0.01" name="tackle_success" min="0" max="1" required> %</label><br><br>
+        <label>🛫 אחוז הצלחה במאבקי אוויר: <input type="number" step="0.01" name="aerial_duels_success" min="0" max="1" required> %</label><br><br>
+
+        <button type="submit">שמור</button>
+        <h2>שחקנים שנרשמו</h2>
+<table border="1" class="edi_del">
+    <tr>
+        <th>שם</th><th>קבוצה</th><th>גולים</th><th>בישולים</th><th>פעולות</th>
+    </tr>
+    {% for round_name, players in matches_data.items() %}
+        {% for player in players %}
+            <tr>
+                <td>{{ player.name }}</td>
+                <td>{{ player.team_name }}</td>
+                <td>{{ player.goals }}</td>
+                <td>{{ player.assists }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_player') }}" style="display:inline;">
+                        <input type="hidden" name="round" value="{{ round_name }}">
+                        <input type="hidden" name="player_name" value="{{ player.name }}">
+                        <button type="submit" >🗑️ מחק</button>
+                    </form>
+                    <form method="GET" action="{{ url_for('edit_player') }}" style="display:inline;">
+                        <input type="hidden" name="round" value="{{ round_name }}">
+                        <input type="hidden" name="player_name" value="{{ player.name }}">
+                        <button type="submit" >📝 ערוך</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+</table>
+
+    </form>
+</body>
+</html>
+

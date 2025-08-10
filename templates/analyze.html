@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ניתוח שחקן</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav> 
+        <ul> 
+            <li><a href="{{ url_for('login_page') }}">🏠 דף הבית</a></li>
+            <li><a href="{{ url_for('analyze_player')}}">👤 ניתוח שחקנים</a></li>
+            <li><a href="{{ url_for('compare_players')}}">⚔️ השוואת שחקנים</a></li>
+            <li><a href="#">🏟️ ניתוח קבוצות</a></li>
+            <li><a href="{{ url_for('data_page') }}">📊 DATA - ליגת העל</a></li>
+            <li><a href="#">🔍 חיפוש מתקדם</a></li>
+        </ul>
+
+    </nav>
+    <div class="container">
+        <h1>ניתוח שחקן אישי</h1>
+
+               <!-- טופס חיפוש -->
+               <form method="POST" action="{{ url_for('analyze_player') }}">
+                <label for="player_name">הכנס שם שחקן:</label>
+                <input type="text" name="player_name" id="player_name" required>
+                <button type="submit">חפש</button>
+            </form>
+    
+            {% if player_data %}
+                <!-- פרטי שחקן בסיסיים -->
+                <div class="player-card">
+                    <h2>{{ player_data[0].name }}</h2>
+                    <p>קבוצה: {{ player_data[0].team_name }}</p>
+                </div>
+    
+                <!-- טבלת סיכום -->
+                <h3>סיכום עונתי</h3>
+                <table border="1">
+                    <tr><th>שערים</th><td>{{ summary.total_goals }}</td></tr>
+                    <tr><th>בישולים</th><td>{{ summary.total_assists }}</td></tr>
+                    <tr><th>xG ממוצע</th><td>{{ summary.avg_xg }}</td></tr>
+                    <tr><th>מסירות מפתח ממוצע</th><td>{{ summary.avg_key_passes }}</td></tr>
+                    <tr><th>דריבלים מוצלחים ממוצע</th><td>{{ summary.avg_dribble_success }}%</td></tr>
+                </table>
+    
+                <!-- שיאים אישיים -->
+                <h3>שיאים אישיים</h3>
+                <ul>
+                    <li>משחק עם הכי הרבה שערים: מחזור {{ peaks.max_goals.round }} ({{ peaks.max_goals.goals }} שערים)</li>
+                    <li>משחק עם הכי הרבה בישולים: מחזור {{ peaks.max_assists.round }} ({{ peaks.max_assists.assists }} בישולים)</li>
+                    <li>xG מקסימלי: {{ peaks.max_xg.xg }} במחזור {{ peaks.max_xg.round }}</li>
+                </ul>
+            {% elif request.method == 'POST' %}
+                <p style="color:red;">שחקן לא נמצא</p>
+            {% endif %}
+        </div>
+    </body>
+    </html>

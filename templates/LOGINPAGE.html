@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Match Mind - הזנת שחקנים</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+
+    <nav> 
+        <ul> 
+            <li><a href="{{ url_for('login_page') }}">🏠 דף הבית</a></li>
+            <li><a href="{{ url_for('analyze_player')}}">👤 ניתוח שחקנים</a></li>
+            <li><a href="{{ url_for('compare_players')}}">⚔️ השוואת שחקנים</a></li>
+            <li><a href="#">🏟️ ניתוח קבוצות</a></li>
+            <li><a href="{{ url_for('data_page') }}">📊 DATA - ליגת העל</a></li>
+            <li><a href="#">🔍 חיפוש מתקדם</a></li>
+        </ul>
+    </nav>
+
+    <header> 
+        <h1>⚽ Match Mind – ניתוח שחקני ליגת העל</h1>  
+        <p>
+            ברוכים הבאים ל-Match Mind – הפלטפורמה הראשונה מסוגה בישראל לניתוח מעמיק של ביצועי שחקני ליגת העל בכדורגל.  
+            כאן תוכלו לעקוב אחר כל פעולה על הדשא: שערים, מסירות מדויקות, מרחקי ריצה, תרומה התקפית והגנתית – והכול לפי כל משחק.  
+            ניתן להשוות בין שחקנים באותה עמדה, לזהות מגמות, ולנתח ביצועים לאורך עונה שלמה.
+            <div id="image"> 
+                <img src="{{ url_for('static', filename='images/3DLogoLab-removebg-preview.png') }}" alt="לוגו האתר">
+            </div>
+            
+        </p>
+    </header>
+  
+    {% if last_round %}
+    <section>
+        <h2>שלושת המצטיינים במחזור {{ last_round }}</h2>
+        <ol>
+        {% for p in top_players %}
+            <li>{{ p.name }} - גולים: {{ p.goals }}, אסיסטים: {{ p.assists }}, מסירות מפתח: {{ p.key_passes }}</li>
+        {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
+
+    <h2>🔝 שחקני המחזור האחרון</h2>
+
+    {% if top_players %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>שם השחקן</th>
+                <th>שם קבוצה</th>
+                <th>גולים</th>
+                <th>🎯 xG</th>
+                <th>בישולים</th>
+                <th>מסירות מפתח</th>
+                <th>🎯 מסירות מדויקות</th>
+                <th>🧠 יצירת מצבים</th>
+                <th>🏃‍♂️ ספרינטים</th>
+                <th>🕹️ דריבלים מוצלחים %</th>
+                <th>🛡️ תיקולים מוצלחים %</th>
+                <th>🛫 מאבקי אוויר %</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in top_players %}
+            <tr>
+                <td>{{ player.name }}</td>
+                <td>{{ player.team_name }}</td>
+                <td>{{ player.goals }}</td>
+                <td>{{ player.xg }}</td>  
+                <td>{{ player.assists }}</td>
+                <td>{{ player.key_passes }}</td>
+                <td>{{ player.accurate_passes }}</td>
+                <td>{{ player.chances_created }}</td>
+                <td>{{ player.sprints }}</td>
+                <td>{{ player.dribble_success }}%</td>
+                <td>{{ player.tackle_success }}%</td>
+                <td>{{ player.aerial_duels_success }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>אין נתונים זמינים כרגע.</p>
+    {% endif %}
+</body>
+</html>

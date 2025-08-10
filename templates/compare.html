@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>השוואת שחקנים</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='compare.css') }}">
+</head>
+<body>
+    <nav> 
+            <ul> 
+                <li><a href="{{ url_for('login_page') }}">🏠 דף הבית</a></li>
+                <li><a href="{{ url_for('analyze_player')}}">👤 ניתוח שחקנים</a></li>
+                <li><a href="{{ url_for('compare_players')}}">⚔️ השוואת שחקנים</a></li>
+                <li><a href="#">🏟️ ניתוח קבוצות</a></li>
+                <li><a href="{{ url_for('data_page') }}">📊 DATA - ליגת העל</a></li>
+                <li><a href="#">🔍 חיפוש מתקדם</a></li>
+            </ul>
+    </nav>
+
+    <div class="container">
+        <h1>השוואת שחקנים</h1>
+
+        <form method="POST">
+            <label for="player1">שחקן ראשון:</label>
+            <input type="text" name="player1" id="player1" list="players" required>
+        
+            <label for="player2">שחקן שני:</label>
+            <input type="text" name="player2" id="player2" list="players" required>
+        
+            <datalist id="players">
+                {% for name in player_names %}
+                    <option value="{{ name }}">
+                {% endfor %}
+            </datalist>
+        
+            <button type="submit">השווה</button>
+        </form>
+        
+
+        {% if comparison_data %}
+        <h2>תוצאות השוואה</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>קטגוריה</th>
+                    {% for player in comparison_data %}
+                        <th>{{ player.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in fields %}
+                    <tr>
+                        <td>{{ field }}</td>
+                        {% for player in comparison_data %}
+                            <td class="{{ player.colors[field] }}">{{ player[field] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
+

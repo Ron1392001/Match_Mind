@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <title>נתוני שחקנים מליגת העל</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav> 
+        <ul> 
+            <li><a href="{{ url_for('login_page') }}">🏠 דף הבית</a></li>
+            <li><a href="{{ url_for('analyze_player')}}">👤 ניתוח שחקנים</a></li>
+            <li><a href="{{ url_for('compare_players')}}">⚔️ השוואת שחקנים</a></li>
+            <li><a href="#">🏟️ ניתוח קבוצות</a></li>
+            <li><a href="{{ url_for('data_page') }}">📊 DATA - ליגת העל</a></li>
+            <li><a href="#">🔍 חיפוש מתקדם</a></li>
+        </ul>
+    </nav>
+    <h2>נתוני שחקנים מליגת העל</h2> 
+    <form method="POST">
+        <label>בחר מחזור:
+            <select name="round">
+                <option value="">-- כל המחזורים --</option>
+                {% for r in rounds %}
+                    <option value="{{ r }}">{{ r }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">חפש</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>מחזור</th>
+                <th>שחקן</th>
+                <th>קבוצה</th>
+                <th>שערים</th>
+                <th>בישולים</th>
+                <th>xG</th>
+                <th>מסירות מפתח</th>
+                <th>מסירות מדויקות</th>
+                <th>ספרינטים</th>
+                <th>דריבלים %</th>
+                <th>תיקולים %</th>
+                <th>מאבקי אוויר %</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in filtered_data %}
+            <tr>
+                <td>{{ p.round }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.team_name }}</td>
+                <td>{{ p.goals }}</td>
+                <td>{{ p.assists }}</td>
+                <td>{{ p.xg }}</td>
+                <td>{{ p.key_passes }}</td>
+                <td>{{ p.accurate_passes }}</td>
+                <td>{{ p.sprints }}</td>
+                <td>{{ p.dribble_success }}%</td>
+                <td>{{ p.tackle_success }}%</td>
+                <td>{{ p.aerial_duels_success }}%</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
